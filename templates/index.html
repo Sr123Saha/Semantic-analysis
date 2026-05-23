@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Match | Semantic Resume Matching</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>HR MATCH</h1>
+            <p>Семантический анализ и ранжирование резюме</p>
+        </header>
+
+        <!-- Контролы сверху -->
+        <div class="top-controls">
+            <div class="threshold-control">
+                <label>ПОРОГ ОТСЕВА</label>
+                <input type="range" id="threshold" min="0" max="1" step="0.01" value="0.40">
+                <span class="threshold-value" id="thresholdValue">40%</span>
+            </div>
+            <div class="sort-control">
+                <label>СОРТИРОВКА</label>
+                <select id="sortBy">
+                    <option value="score_desc">По убыванию релевантности ↓</option>
+                    <option value="score_asc">По возрастанию релевантности ↑</option>
+                    <option value="name">По названию файла</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="card">
+                    <h3>ОПИСАНИЕ ВАКАНСИИ</h3>
+                    <textarea id="vacancyText" rows="10" placeholder="Введите текст вакансии или требования к кандидату...
+
+Пример:
+Требуется Python разработчик (Middle/Senior)
+Обязанности:
+- Разработка backend на Python
+- Проектирование API
+
+Требования:
+- Опыт Python от 3 лет
+- Знание Django/Flask
+- PostgreSQL, Docker"></textarea>
+                </div>
+
+                <div class="card">
+                    <h3>ЗАГРУЗКА РЕЗЮМЕ</h3>
+                    <div class="dropzone" id="dropzone">
+                        <div class="icon">📒</div>
+                        <div class="text">Перетащите файлы сюда или нажмите для выбора</div>
+                        <div class="text" style="font-size: 0.7rem; margin-top: 8px; color: #52525b;">
+                            Поддерживаются: PDF, DOCX, TXT
+                        </div>
+                        <input type="file" id="resumeFiles" multiple accept=".pdf,.docx,.txt" style="display: none;">
+                    </div>
+                    <div id="fileList" class="file-list"></div>
+                </div>
+
+                <button id="analyzeBtn" class="btn-primary">ЗАПУСТИТЬ АНАЛИЗ</button>
+            </aside>
+            <main class="content">
+                <div id="statsSection" class="stats-grid" style="display: none;"></div>
+                
+                <div id="chartSection" style="display: none;">
+                    <div id="histogram"></div>
+                </div>
+                
+                <div id="resultsSection" style="display: none;">
+                    <div class="results-header">
+                        <h3>РАНЖИРОВАННЫЕ КАНДИДАТЫ</h3>
+                        <button id="exportBtn" class="btn-secondary">ЭКСПОРТ CSV</button>
+                    </div>
+                    <div id="resultsTable" class="results-table"></div>
+                </div>
+                
+                <div id="loadingIndicator" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Анализ резюме...</p>
+                </div>
+                
+                <div id="welcomeMessage" class="welcome-message">
+                    <div class="card">
+                        <h3> ИНСТРУКЦИЯ</h3>
+                        <ol>
+                            <li>Введите текст вакансии в левой панели</li>
+                            <li>Загрузите резюме (PDF, DOCX, TXT)</li>
+                            <li>Настройте порог отсева сверху</li>
+                            <li>Нажмите "Запустить анализ"</li>
+                        </ol>
+                        <p style="margin-top: 16px; font-size: 0.75rem; color: #71717a;">
+                            Модель семантически сопоставляет резюме с вакансией и ранжирует по релевантности
+                        </p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
